@@ -89,7 +89,7 @@ resource "azapi_update_resource" "acr_update" {
     }
   }
 
-  depends_on = [ 
+  depends_on = [
     azurerm_container_registry.this
   ]
 }
