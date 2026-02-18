@@ -325,7 +325,7 @@ If enabled, this retention policy will purge an untagged manifest after a specif
 DESCRIPTION
 }
 
-variable "custom_container_registry_images" {
+variable "container_registry_images" {
   type = map(object({
     task_name            = string
     dockerfile_path      = string
