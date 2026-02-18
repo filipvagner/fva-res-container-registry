@@ -182,7 +182,7 @@ resource "azurerm_private_endpoint_application_security_group_association" "this
 }
 
 resource "azurerm_container_registry_task" "this" {
-  for_each = var.custom_container_registry_images
+  for_each = var.container_registry_images
 
   container_registry_id = azurerm_container_registry.this.id
   name                  = each.value.task_name
@@ -213,7 +213,7 @@ resource "azurerm_container_registry_task" "this" {
 }
 
 resource "azurerm_container_registry_task_schedule_run_now" "this" {
-  for_each = var.custom_container_registry_images
+  for_each = var.container_registry_images
 
   container_registry_task_id = azurerm_container_registry_task.this[each.key].id
 
@@ -228,7 +228,7 @@ resource "azurerm_container_registry_task_schedule_run_now" "this" {
 }
 
 resource "azurerm_role_assignment" "container_registry_push_for_task" {
-  for_each = var.custom_container_registry_images
+  for_each = var.container_registry_images
 
   principal_id         = azurerm_container_registry_task.this[each.key].identity[0].principal_id
   scope                = azurerm_container_registry.this.id
