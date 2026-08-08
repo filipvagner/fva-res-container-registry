@@ -8,7 +8,7 @@ resource "azurerm_container_registry" "this" {
   data_endpoint_enabled                 = var.data_endpoint_enabled
   export_policy_enabled                 = var.export_policy_enabled
   network_rule_bypass_option            = var.network_rule_bypass_option
-  network_rule_bypass_for_tasks_enabled = var.network_rule_bypass_for_tasks_enabled
+  #network_rule_bypass_for_tasks_enabled = var.network_rule_bypass_for_tasks_enabled
   public_network_access_enabled         = var.public_network_access_enabled
   quarantine_policy_enabled             = var.quarantine_policy_enabled
   retention_policy_in_days              = var.sku == "Premium" ? var.retention_policy_in_days : null
@@ -81,19 +81,19 @@ resource "azurerm_container_registry" "this" {
   }
 }
 
-# resource "azapi_update_resource" "acr_update" {
-#   type        = "Microsoft.ContainerRegistry/registries@2025-05-01-preview"
-#   resource_id = azurerm_container_registry.this.id
-#   body = {
-#     properties = {
-#       networkRuleBypassAllowedForTasks = true
-#     }
-#   }
+resource "azapi_update_resource" "acr_update" {
+  type        = "Microsoft.ContainerRegistry/registries@2025-05-01-preview"
+  resource_id = azurerm_container_registry.this.id
+  body = {
+    properties = {
+      networkRuleBypassAllowedForTasks = true
+    }
+  }
 
-#   depends_on = [
-#     azurerm_container_registry.this
-#   ]
-# }
+  depends_on = [
+    azurerm_container_registry.this
+  ]
+}
 
 resource "azurerm_management_lock" "this" {
   count = var.lock != null ? 1 : 0
