@@ -1,19 +1,20 @@
 resource "azurerm_container_registry" "this" {
-  location                      = var.location
-  name                          = var.name
-  resource_group_name           = var.resource_group_name
-  sku                           = var.sku
-  admin_enabled                 = var.admin_enabled
-  anonymous_pull_enabled        = var.anonymous_pull_enabled
-  data_endpoint_enabled         = var.data_endpoint_enabled
-  export_policy_enabled         = var.export_policy_enabled
-  network_rule_bypass_option    = var.network_rule_bypass_option
-  public_network_access_enabled = var.public_network_access_enabled
-  quarantine_policy_enabled     = var.quarantine_policy_enabled
-  retention_policy_in_days      = var.sku == "Premium" ? var.retention_policy_in_days : null
-  tags                          = var.tags
-  trust_policy_enabled          = var.enable_trust_policy
-  zone_redundancy_enabled       = var.zone_redundancy_enabled
+  location                              = var.location
+  name                                  = var.name
+  resource_group_name                   = var.resource_group_name
+  sku                                   = var.sku
+  admin_enabled                         = var.admin_enabled
+  anonymous_pull_enabled                = var.anonymous_pull_enabled
+  data_endpoint_enabled                 = var.data_endpoint_enabled
+  export_policy_enabled                 = var.export_policy_enabled
+  network_rule_bypass_option            = var.network_rule_bypass_option
+  network_rule_bypass_for_tasks_enabled = var.network_rule_bypass_for_tasks_enabled
+  public_network_access_enabled         = var.public_network_access_enabled
+  quarantine_policy_enabled             = var.quarantine_policy_enabled
+  retention_policy_in_days              = var.sku == "Premium" ? var.retention_policy_in_days : null
+  tags                                  = var.tags
+  trust_policy_enabled                  = var.enable_trust_policy
+  zone_redundancy_enabled               = var.zone_redundancy_enabled
 
   dynamic "encryption" {
     for_each = var.customer_managed_key != null ? { this = var.customer_managed_key } : {}
@@ -80,19 +81,19 @@ resource "azurerm_container_registry" "this" {
   }
 }
 
-resource "azapi_update_resource" "acr_update" {
-  type        = "Microsoft.ContainerRegistry/registries@2025-05-01-preview"
-  resource_id = azurerm_container_registry.this.id
-  body = {
-    properties = {
-      networkRuleBypassAllowedForTasks = true
-    }
-  }
+# resource "azapi_update_resource" "acr_update" {
+#   type        = "Microsoft.ContainerRegistry/registries@2025-05-01-preview"
+#   resource_id = azurerm_container_registry.this.id
+#   body = {
+#     properties = {
+#       networkRuleBypassAllowedForTasks = true
+#     }
+#   }
 
-  depends_on = [
-    azurerm_container_registry.this
-  ]
-}
+#   depends_on = [
+#     azurerm_container_registry.this
+#   ]
+# }
 
 resource "azurerm_management_lock" "this" {
   count = var.lock != null ? 1 : 0
