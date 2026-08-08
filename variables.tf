@@ -269,12 +269,6 @@ Possible values are `None` and `AzureServices`. Defaults to `None`.
 DESCRIPTION
 }
 
-variable "network_rule_bypass_for_tasks_enabled" {
-  type        = bool
-  default     = false
-  description = "Specifies whether to allow trusted Azure services to bypass network rules for tasks."
-}
-
 variable "georeplications" {
   type = list(object({
     location                  = string
